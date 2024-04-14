@@ -8,8 +8,8 @@ const int echoPin_2 = 5;
 const int trigPin_3 = 23;
 const int echoPin_3 = 22;
 
-const char *ssid = "rede";
-const char *password = "senha";
+const char ssid[] = "rede";
+const char password[] = "senha";
 
 void defaultHC_SR04(int trigPin, int echoPin, int numSensor){
   digitalWrite(trigPin, LOW);
