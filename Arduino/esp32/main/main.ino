@@ -14,34 +14,6 @@ const int echoPin_3 = 22;
 const char ssid[] = "rede";
 const char password[] = "senha";
 
-void dataEncapsulation(long distance, int sensorId){
-  if(!SPIFFS.begin(true)){
-    Serial.println("Erro ao montar sistema de arquivos");
-  }
-  File arquivo = SPIFFS.open("/arq.csv", FILE_WRITE);
-  if(!arquivo){
-    Serial.println("Erro ao criar arquivo CSV");
-  }
-  arquivo.println("Sensor 1, Sensor 2, Sensor 3");
-
-  if(distance <= 10){
-    if(sensorId == 1){
-      arquivo.print(distance);
-    }
-    if(sensorid == 2){
-      arquivo.print(",");
-      arquivo.print(distance);
-    }
-    if(sensorId == 3){
-      arquivo.print(",");
-      arquivo.print(",");
-      arquivo.print(distance);
-    }
-  }
-
-  arquivo.close();
-}
-
 void checkTrash(long distance, int numSensor){
   if(distance <= 10){
     trash[numSensor - 1] = false;
@@ -98,13 +70,14 @@ void setup() {
   pinMode(echoPin_2, INPUT);
   pinMode(trigPin_3, OUTPUT);
   pinMode(echoPin_3, INPUT);
+
 }
 
 void loop() {
 
-  dataEncapsulation(defaultHC_SR04(trigPin_1, echoPin_1, 1), 1);
-  dataEncapsulation(defaultHC_SR04(trigPin_2, echoPin_2, 2), 2);
-  dataEncapsulation(defaultHC_SR04(trigPin_3, echoPin_3, 3), 3);
+  defaultHC_SR04(trigPin_1, echoPin_1, 1);
+  defaultHC_SR04(trigPin_2, echoPin_2, 2);
+  defaultHC_SR04(trigPin_3, echoPin_3, 3);
 
   Serial.println();
 
