@@ -1,7 +1,5 @@
 #include <Arduino.h>
 #include <WiFi.h>
-#include <SPIFFS.h>
-#include <FS.h>
 
 bool trash[3] = {false, false, false};
 const int trigPin_1 = 4;
