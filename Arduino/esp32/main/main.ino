@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <WiFi.h>
+#include <PubSubClient.h>
 
 bool trash[3] = {false, false, false};
 const int trigPin_1 = 4;
@@ -9,8 +10,16 @@ const int echoPin_2 = 5;
 const int trigPin_3 = 23;
 const int echoPin_3 = 22;
 
-const char ssid[] = "rede";
-const char password[] = "senha";
+const char ssid[] = "Visitantes";
+const char password[] = "Guest20.2";
+const char mqttServer[] = "";
+const int mqttport = 8883;
+const char deviceId[] = "";
+const char username[] = "";
+const char devicePassword[]= "";
+
+WiFiClient espClient;
+PubSubClient client(espClient);
 
 void checkTrash(long distance, int numSensor){
   if(distance <= 10){
@@ -43,6 +52,22 @@ long defaultHC_SR04(int trigPin, int echoPin, int numSensor){
   return distance;
 }
 
+
+void connectToIoTHub(const char *mqttServer, int mqttPort, const char *deviceId, const char *username, const char *devicePassword) {
+  client.setServer(mqttServer, mqttPort);
+  while (!client.connected()) {
+    Serial.println("Conectando ao servidor MQTT...");
+    if (client.connect(deviceId, username, devicePassword)) {
+      Serial.println("Conectado ao servidor MQTT");
+    } else {
+      Serial.print("Falha na conexão ao MQTT, rc=");
+      Serial.print(client.state());
+      Serial.println(" Tentando novamente em 5 segundos...");
+      delay(5000);
+    }
+  }
+}
+
 void connectionWifi(const char *ssid, const char *password){
   WiFi.mode(WIFI_STA);
   Serial.println();
@@ -53,6 +78,7 @@ void connectionWifi(const char *ssid, const char *password){
     delay(1000);
     Serial.println("Tentando conectar a rede Wi-Fi...");
   }
+
   Serial.println("Conectado a rede Wi-Fi com sucesso!");
   Serial.print("Endereço IP: ");
   Serial.println(WiFi.localIP());
@@ -61,6 +87,7 @@ void connectionWifi(const char *ssid, const char *password){
 void setup() {
   Serial.begin(9600);
   connectionWifi(ssid, password);
+  //connectToIoTHub(mqttServer, mqttport, deviceId, username, devicePassword);
 
   pinMode(trigPin_1, OUTPUT);
   pinMode(echoPin_1, INPUT);
@@ -73,11 +100,11 @@ void setup() {
 
 void loop() {
 
-  defaultHC_SR04(trigPin_1, echoPin_1, 1);
-  defaultHC_SR04(trigPin_2, echoPin_2, 2);
-  defaultHC_SR04(trigPin_3, echoPin_3, 3);
+  //defaultHC_SR04(trigPin_1, echoPin_1, 1);
+  //defaultHC_SR04(trigPin_2, echoPin_2, 2);
+  //defaultHC_SR04(trigPin_3, echoPin_3, 3);
 
-  Serial.println();
+  //Serial.println();
 
   delay(1000);
 }
